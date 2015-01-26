@@ -14,7 +14,7 @@ public class MainActivity extends ActionBarActivity {
 
     // expr = the current string to be calculated
     StringBuffer expr;
-
+    int ans;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +36,28 @@ public class MainActivity extends ActionBarActivity {
         //reference: http://stackoverflow.com/questions/2206378/how-to-split-a-string-but-also-keep-the-delimiters
         String e = expr.toString();
         String[] tokens = e.split("((?<=\\+)|(?=\\+))|((?<=\\-)|(?=\\-))|((?<=\\*)|(?=\\*))|((?<=/)|(?=/))");
+        ans = Integer.parseInt(tokens[0]);
+        for (int i = 1; i < tokens.length;i+=2 )
+        {
+            if(tokens[i].equals("+")){
+               ans += Integer.parseInt(tokens[i+1]);
+
+            }
+            else if(tokens[i].equals("-")){
+                ans -= Integer.parseInt(tokens[i+1]);
+            }
+            else if(tokens[i].equals("/")){
+                ans /= Integer.parseInt(tokens[i+1]);
+            }
+            else if(tokens[i].equals("*")){
+                ans *= Integer.parseInt(tokens[i+1]);
+            }
+
+        }
+        TextView tvAns = (TextView)findViewById(R.id.tvAns);
+        tvAns.setText(Integer.toString(ans));
     }
+
 
     public void digitClicked(View v) {
         //d = the label of the digit button
@@ -51,10 +72,32 @@ public class MainActivity extends ActionBarActivity {
 
     public void operatorClicked(View v) {
         //IF the last character in expr is not an operator and expr is not "",
+
+        String op = ((TextView)v).getText().toString();
+        if (expr.length() > 0) {
+        if (!(expr.charAt(expr.length()-1) == '+' || expr.charAt(expr.length()-1) == '-' || expr.charAt(expr.length()-1) == '/' || expr.charAt(expr.length()-1) == '*')){
+            expr.append(op);
+            updateExprDisplay();
+        }}
+
+
         //THEN append the clicked operator and updateExprDisplay,
         //ELSE do nothing
     }
+    public void equalClicked(View v) {
+        //Remove the last character from expr, and updateExprDisplay
+        expr = new StringBuffer();
+        expr.append(Integer.toString(ans));
+        updateExprDisplay();
 
+
+        //TextView tvExpr = (TextView)findViewById(R.id.tvExpr);
+        //tvExpr.setText(Integer.toString(ans));
+
+        TextView tvAns = (TextView)findViewById(R.id.tvAns);
+        tvAns.setText(" ");
+
+    }
     public void ACClicked(View v) {
         //Clear expr and updateExprDisplay
         expr = new StringBuffer();
